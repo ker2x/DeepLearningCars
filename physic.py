@@ -2,6 +2,9 @@ from vector import Vector
 
 
 class PhysicsEntity:
+    """https://asawicki.info/Mirror/Car%20Physics%20for%20Games/Car%20Physics%20for%20Games.html
+    https://github.com/joohoonkim/Drive-Simulation/blob/master/car_model.py
+    """
     def __init__(self, world, pos=(0, 0), vel=(0, 0), acc=(0, 0)):
         self.pos = Vector()
         self.vel = Vector()

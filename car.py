@@ -217,7 +217,7 @@ class Car(PhysicsEntity):
 
     def updateFriction(self):
         """ apply drag, rolling resistance, and lateral friction"""
-        if abs(self.vel.x) > .01 and abs(self.vel.y) > .01:
+        if abs(self.vel.x) > .001 and abs(self.vel.y) > .001:
             """ apply the drag force """
             drag = Vector()
             drag.set(self.vel)
@@ -235,7 +235,6 @@ class Car(PhysicsEntity):
         """ apply lateral friction"""
         # ms = 250
         # self.c_tf = max(3, (((15 - 5) / (100 - ms)) * (self.vel.getMag() - ms)) + 3)
-
         line = -1 * self.c_tf * self.mass
         lateral = self.body.getMidPoint().getReciprocal()
         lat_vel = lateral.getProjection(self.vel)
