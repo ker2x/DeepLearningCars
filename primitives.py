@@ -1,10 +1,11 @@
-import pygame
+#import pygame
+import pyglet
 
 from vector import Vector
 
 
 class Line:
-    def __init__(self, s=(0, 0), e=(1, 1), color=(255, 0, 0), width=1):
+    def __init__(self, s=(0, 0), e=(1, 1), color=(255, 0, 0), width=1, alpha=255):
         self.start = Vector()
         self.start.set(s)
         self.end = Vector()
@@ -12,6 +13,7 @@ class Line:
 
         self.width = width
         self.color = color
+        self.alpha = alpha
 
     def getSlope(self):
         try:
@@ -65,17 +67,20 @@ class Line:
         self.end.mult(s)
 
     def draw(self, display):
-        pygame.draw.line(display, self.color,
-                         [int(self.start.x), int(self.start.y)],
-                         [int(self.end.x), int(self.end.y)], self.width * 2 + 1)
+        #pygame.draw.line(display, self.color,
+        #                 [int(self.start.x), int(self.start.y)],
+        #                 [int(self.end.x), int(self.end.y)], self.width * 2 + 1)
+        pyglet.shapes.Line.opacity = self.alpha
+        pyglet.shapes.Line(self.start.x, self.start.y, self.end.x, self.end.y, self.width, self.color).draw()
 
 
 class Text:
     def __init__(self, message):
-        self.font = pygame.font.Font('barcade-brawl.ttf', 16)
-        self.text = self.font.render(message, False, (0, 0, 0))
-        self.textRect = self.text.get_rect()
-        self.textRect.center = (955 - (self.textRect.size[0] / 2.0), 100 - (self.textRect.size[1] / 2.0))
+        #self.textRect = self.text.get_rect()
+        #self.textRect.center = (955 - (self.textRect.size[0] / 2.0), 100 - (self.textRect.size[1] / 2.0))
+        self.font_name = 'Times New Roman'
+        self.text = message
+        self.label = pyglet.text.Label(message, font_name=self.font_name, font_size=16)
 
     def scale(self, s):
         pass
@@ -84,7 +89,7 @@ class Text:
         pass
 
     def draw(self, display):
-        display.blit(self.text, self.textRect)
+        self.label.draw()
 
 
 class Circle:
@@ -92,8 +97,8 @@ class Circle:
         self.radius = radius
         self.pos = Vector()
         self.pos.set(pos)
-
         self.color = c
+
 
     def shift(self, s):
         self.pos.sub(s)
@@ -103,7 +108,8 @@ class Circle:
         self.radius *= min(s.x, s.y)
 
     def draw(self, display):
-        pygame.draw.circle(display, self.color, (int(self.pos.x), int(self.pos.y)), int(self.radius))
+        #pygame.draw.circle(display, self.color, (int(self.pos.x), int(self.pos.y)), int(self.radius))
+        pyglet.shapes.Circle(self.pos.x, self.pos.y, self.radius, self.color).draw()
 
 
 class Poly:
@@ -211,3 +217,6 @@ class Rect:
 
     def scale(self, scale):
         self.size.mult(scale)
+
+    def draw(self, display):
+        pass

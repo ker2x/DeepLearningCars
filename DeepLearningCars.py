@@ -1,7 +1,7 @@
 import timeit
 from random import randint
 
-from pygame.locals import *
+#from pygame.locals import *
 
 from car import Auto
 from mouse import Mouse
@@ -10,7 +10,13 @@ from track import RaceTrack
 from viewer import TargetViewer
 
 #import matplotlib.pyplot as plt
-#import pyglet
+import pyglet
+from pyglet.window import key
+from pyglet.window import mouse
+
+
+window = pyglet.window.Window(800,600, vsync=False)
+datawindow = pyglet.window.Window(vsync=False)
 
 
 reset_timer = 30000  # reset the track after n ms
@@ -174,23 +180,41 @@ class Game:
         self.fps = 60
         self.running = 1
         self.t = timeit.default_timer()
+        pyglet.app.run()
+        window.set_caption('Simulation')
+        datawindow.set_caption('Data dashboard')
 
     def update(self):
-        self.world.events = pygame.event.get()
+        #self.world.events = pygame.event.get()
         self.world.dt = 1 / 120  # make the physic run at a "simulated" 120fps
         # self.world.dt = (timeit.default_timer() - self.t)  # make simulation dependent of framerate
         self.world.update()
         self.t = timeit.default_timer()
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.running = False
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    self.world.reset()
+#        for event in pygame.event.get():
+#            if event.type == pygame.QUIT:
+#                self.running = False
+#            if event.type == KEYDOWN:
+#                if event.key == K_ESCAPE:
+#                    self.world.reset()
 
-    def render(self):
-        self.world.render()
+#    def render(self):
+#        self.world.render()
+
+    @window.event
+    def on_draw(self):
+        window.clear()
+
+    @window.event
+    def on_key_press(symbol, modifiers):
+        pass
+
+    @window.event
+    def on_mouse_press(x, y, button, modifiers):
+        if button == mouse.LEFT:
+            print('The left mouse button was pressed.')
+
+
 
     def play(self):
         running = True

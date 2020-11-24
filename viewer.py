@@ -1,22 +1,31 @@
 import os
-import pygame
+#import pygame
+import pyglet
 
-from pygame.locals import *
+#from pygame.locals import *
 from vector import Vector
 
-os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (20, 30)
+#os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (20, 30)
 
 
 class Viewer:
-    def __init__(self, world, display=pygame.display.set_mode((800, 400), SCALED), size=(20, 10), pos=(-5, -5)):
-        display.set_alpha(None)
+#    def __init__(self, world, display=pygame.display.set_mode((800, 400), SCALED), size=(20, 10), pos=(-5, -5)):
+#        display.set_alpha(None)
+#        self.world = world
+#        self.display = display
+#        self.size = Vector()
+#        self.size.set(size)
+#        self.pos = Vector()
+#        self.pos.set(pos)
+#        self.display_size = self.display.get_size()
+
+    def __init__(self, world, display, size=(20, 10), pos=(-5, -5)):
         self.world = world
         self.display = display
         self.size = Vector()
         self.size.set(size)
         self.pos = Vector()
         self.pos.set(pos)
-        self.display_size = self.display.get_size()
 
     def zoom(self, amt):
         old = Vector()
