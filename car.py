@@ -417,7 +417,7 @@ class Auto(RaceCar):
 
     def __init__(self, world, parent=None):
         RaceCar.__init__(self, world)
-        self.start_time = pygame.time.get_ticks()
+        self.start_time = 0 #pygame.time.get_ticks()
         self.current_track = 0
         self.top = 0
         self.brain = AutoBrain(self)

@@ -15,8 +15,6 @@ from pyglet.window import key
 from pyglet.window import mouse
 
 
-window = pyglet.window.Window(800,600, vsync=False)
-datawindow = pyglet.window.Window(vsync=False)
 
 
 reset_timer = 30000  # reset the track after n ms
@@ -25,8 +23,6 @@ LEARNING_RATE = 0.1
 LEARNING_RATE_DEC = 0.001
 LEARNING_RATE_MIN = 0.05
 graph = []
-
-pygame.init()
 
 
 class AutoSimulation:
@@ -42,7 +38,7 @@ class AutoSimulation:
         self.mouse = Mouse(self)
         self.track = RaceTrack(self)
         self.text = Text("Generation : 0")
-        self.start_time = pygame.time.get_ticks()
+        self.start_time = 0 #pygame.time.get_ticks()
         self.addNewAutos(num_car)
 
     def generateTrack(self, difficulty):
@@ -180,7 +176,6 @@ class Game:
         self.fps = 60
         self.running = 1
         self.t = timeit.default_timer()
-        pyglet.app.run()
         window.set_caption('Simulation')
         datawindow.set_caption('Data dashboard')
 
@@ -201,44 +196,53 @@ class Game:
 #    def render(self):
 #        self.world.render()
 
-    @window.event
-    def on_draw(self):
-        window.clear()
-
-    @window.event
-    def on_key_press(symbol, modifiers):
-        pass
-
-    @window.event
-    def on_mouse_press(x, y, button, modifiers):
-        if button == mouse.LEFT:
-            print('The left mouse button was pressed.')
-
-
 
     def play(self):
-        running = True
-        lr = timeit.default_timer()
-        self.world.start()
-
-        while running and self.running:
-            self.update()
-            if self.t - lr > 1. / self.fps:
-                self.render()
-                lr = timeit.default_timer()
-
-            running = self.world.cont()
-
-        self.world.end()
-        return
+        pyglet.app.run()
 
 
-def main():
-    g = Game()
-    g.world.generation += 1
-    while g.running:
-        g.play()
+#        running = True
+#        lr = timeit.default_timer()
+#        self.world.start()
+#
+#        while running and self.running:
+#            self.update()
+#            if self.t - lr > 1. / self.fps:
+#                self.render()
+#                lr = timeit.default_timer()
+#
+#            running = self.world.cont()
+#
+#        self.world.end()
+#        return
+
+class Simulation(pyglet.window.Window):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def on_draw(self):
+        self.clear()
+        circle = Circle(10, (400, 400), (0, 0, 255)).draw()
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        if button == mouse.LEFT:
+            print('Simulation : The left mouse button was pressed.')
 
 
-# dis.dis(Line.getSlope)
-main()
+class Dashboard(pyglet.window.Window):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def on_draw(self):
+        self.clear()
+        circle = Circle(10, (400, 400), (0, 0, 255)).draw()
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        if button == mouse.LEFT:
+            print('Dashboard : The left mouse button was pressed.')
+
+
+if __name__ == '__main__':
+    simulation = Simulation(800, 600,"Simulation")
+    dashboard = Dashboard(800, 600,"Dashboard")
+    pyglet.app.run()

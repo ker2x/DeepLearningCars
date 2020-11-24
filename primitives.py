@@ -107,10 +107,10 @@ class Circle:
         self.pos.mult(s)
         self.radius *= min(s.x, s.y)
 
-    def draw(self, display):
+    def draw(self, display=None):
         #pygame.draw.circle(display, self.color, (int(self.pos.x), int(self.pos.y)), int(self.radius))
-        pyglet.shapes.Circle(self.pos.x, self.pos.y, self.radius, self.color).draw()
-
+        pyglet.shapes.Circle(self.pos.x, self.pos.y, self.radius, color=self.color).draw()
+#        circle = pyglet.shapes.Circle(700, 150, 100, color=(50, 225, 30)).draw()
 
 class Poly:
     def __init__(self, points=None, c=(0, 0)):

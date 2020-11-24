@@ -8,7 +8,7 @@ class Mouse:
 
         self.delta = Vector()
 
-        pygame.mouse.set_visible(True)
+#        pygame.mouse.set_visible(True)
 
     @staticmethod
     def getScreenPos():

@@ -57,25 +57,24 @@ class Viewer:
             shape.scale(scale)
             shape.shift(shift)
 
-    @staticmethod
     def render():
-        pygame.display.flip()
+        pass #pygame.display.flip()
 
 
 class TargetViewer(Viewer):
-    def __init__(self, world, target=(0, 0), display=pygame.display.set_mode((1000, 1000)),
-                 size=(800, 800), pos=(-400, -400)):
+    def __init__(self, world, target=(0, 0), display=None, size=(800, 800), pos=(-400, -400)):
         Viewer.__init__(self, world, display, size, pos)
         self.target = Vector()
         self.target.set(target)
         self.speed = 10
 
     def updatePos(self, target=None):
-        if target is not None and not (pygame.mouse.get_pressed(3)[0]):
-            self.target.mult((0, 0))
-            self.target.sub(self.size)
-            self.target.div((2, 2))
-            self.target.add(target)
+
+#        if target is not None and not (pygame.mouse.get_pressed(3)[0]):
+#            self.target.mult((0, 0))
+#            self.target.sub(self.size)
+#            self.target.div((2, 2))
+#            self.target.add(target)
 
             vel = Vector()
             vel.set(self.target)
