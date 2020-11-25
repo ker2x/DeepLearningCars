@@ -1,5 +1,5 @@
 from primitives import *
-
+#import DeepLearningCars
 
 class Mouse:
     def __init__(self, world):
@@ -13,7 +13,7 @@ class Mouse:
     @staticmethod
     def getScreenPos():
         pos = Vector()
-        pos.set(pygame.mouse.get_pos())
+#        pos.set(pygame.mouse.get_pos())
         return pos
 
     def updatePos(self):
@@ -29,9 +29,9 @@ class Mouse:
     def update(self):
         self.updatePos()
 
-        if pygame.mouse.get_pressed(3)[0]:
-            self.world.viewer.pos.sub(self.delta)
-            self.body.pos.sub(self.delta)
+#        if pygame.mouse.get_pressed(3)[0]:
+#            self.world.viewer.pos.sub(self.delta)
+#            self.body.pos.sub(self.delta)
 
         for event in self.world.events:
             if event.type == 5:

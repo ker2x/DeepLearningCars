@@ -66,7 +66,7 @@ class Line:
         self.start.mult(s)
         self.end.mult(s)
 
-    def draw(self, display):
+    def draw(self):
         #pygame.draw.line(display, self.color,
         #                 [int(self.start.x), int(self.start.y)],
         #                 [int(self.end.x), int(self.end.y)], self.width * 2 + 1)
@@ -107,7 +107,7 @@ class Circle:
         self.pos.mult(s)
         self.radius *= min(s.x, s.y)
 
-    def draw(self, display=None):
+    def draw(self):
         #pygame.draw.circle(display, self.color, (int(self.pos.x), int(self.pos.y)), int(self.radius))
         pyglet.shapes.Circle(self.pos.x, self.pos.y, self.radius, color=self.color).draw()
 #        circle = pyglet.shapes.Circle(700, 150, 100, color=(50, 225, 30)).draw()
@@ -190,12 +190,12 @@ class Poly:
             point.mult(scale)
             point.sub(self.pos)
 
-    def draw(self, display):
-        points = []
-        for p in self.points:
-            points.append([p.x + self.pos.x, p.y + self.pos.y])
-
-        pygame.draw.polygon(display, self.color, points)
+    def draw(self):
+        pass
+#        points = []
+#        for p in self.points:
+#            points.append([p.x + self.pos.x, p.y + self.pos.y])
+#        pygame.draw.polygon(display, self.color, points)
 
 
 class Rect:

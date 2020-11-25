@@ -24,9 +24,13 @@ LEARNING_RATE_DEC = 0.001
 LEARNING_RATE_MIN = 0.05
 graph = []
 
+simulation = None
+dashboard = None
+
 
 class AutoSimulation:
-    def __init__(self):
+    def __init__(self, display):
+        self.display = display
         self.autos = []
         self.events = []
         self.generation = 0
@@ -34,12 +38,13 @@ class AutoSimulation:
         self.top_auto = None
         self.slow_car_removed = False
         self.learning_rate = LEARNING_RATE
-        self.viewer = TargetViewer(self)
-        self.mouse = Mouse(self)
+        self.viewer = TargetViewer(self, display=display)
+        #self.mouse = Mouse(self, display=display)
         self.track = RaceTrack(self)
         self.text = Text("Generation : 0")
         self.start_time = 0 #pygame.time.get_ticks()
         self.addNewAutos(num_car)
+        self.display_size = display.get_size()
 
     def generateTrack(self, difficulty):
         size = randint(int(800 - (400 * difficulty)), 800)
@@ -84,7 +89,7 @@ class AutoSimulation:
         d = 1.0 - (1.0 / ((self.generation / 10.0) + 1.0))
         self.generateTrack(d)
         self.text = Text("Generation : " + str(self.generation))
-        self.start_time = pygame.time.get_ticks()
+        self.start_time = 0 #pygame.time.get_ticks()
         for car in self.autos:
             car.start()
 
@@ -92,11 +97,11 @@ class AutoSimulation:
         for car in self.autos:
             if not car.stop:  # only update unstopped car
                 car.update()
-                if (not self.slow_car_removed) and ((pygame.time.get_ticks() - self.start_time) > 5000):
-                    """remove slow car after N ms"""
-                    if car.vel.getMag() < 10:
-                        # print("removing car ", car.vel.getMag())
-                        car.stop = 1
+#                if (not self.slow_car_removed) and ((pygame.time.get_ticks() - self.start_time) > 5000):
+#                    """remove slow car after N ms"""
+#                    if car.vel.getMag() < 10:
+#                        # print("removing car ", car.vel.getMag())
+#                        car.stop = 1
 
         # if (not self.slow_car_removed) and ((pygame.time.get_ticks() - self.start_time) > 5000):
         #    """Slow car removed"""
@@ -104,14 +109,14 @@ class AutoSimulation:
         #    self.slow_car_removed = True
 
         self.getFittestAuto()
-        self.mouse.update()
+        #self.mouse.update()
 
         if not self.top_auto.stop:
             # self.viewer.updatePos(self.top_auto.body.pos)
             self.viewer.updatePos(None) # KERU fix the view at the center
-        if pygame.time.get_ticks() - self.start_time > reset_timer:
-            print("Maximum time reached")
-            self.reset()
+#        if pygame.time.get_ticks() - self.start_time > reset_timer:
+#            print("Maximum time reached")
+#            self.reset()
 
     def cont(self):
         stopped = 0
@@ -171,13 +176,14 @@ class AutoSimulation:
 
 
 class Game:
-    def __init__(self, world=AutoSimulation()):
+    #def __init__(self, world=AutoSimulation()):
+    def __init__(self, world):
         self.world = world
         self.fps = 60
         self.running = 1
         self.t = timeit.default_timer()
-        window.set_caption('Simulation')
-        datawindow.set_caption('Data dashboard')
+        #window.set_caption('Simulation')
+        #datawindow.set_caption('Data dashboard')
 
     def update(self):
         #self.world.events = pygame.event.get()
@@ -195,12 +201,6 @@ class Game:
 
 #    def render(self):
 #        self.world.render()
-
-
-    def play(self):
-        pyglet.app.run()
-
-
 #        running = True
 #        lr = timeit.default_timer()
 #        self.world.start()
@@ -216,9 +216,21 @@ class Game:
 #        self.world.end()
 #        return
 
+
 class Simulation(pyglet.window.Window):
+    """Pyglet simulation window"""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.world = AutoSimulation(self)
+        self.world.start()
+
+    def display_size(self):
+        return self.get_size()
+
+    def update(self, *args, **kwargs):
+#        print("Simulation update")
+        self.world.update()
+        pass
 
     def on_draw(self):
         self.clear()
@@ -229,20 +241,24 @@ class Simulation(pyglet.window.Window):
             print('Simulation : The left mouse button was pressed.')
 
 
+
 class Dashboard(pyglet.window.Window):
+    """Pyglet Dashboard window"""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
     def on_draw(self):
         self.clear()
-        circle = Circle(10, (400, 400), (0, 0, 255)).draw()
+        circle = Circle(10, (400, 400), (255, 0, 0)).draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
         if button == mouse.LEFT:
             print('Dashboard : The left mouse button was pressed.')
 
 
+
 if __name__ == '__main__':
-    simulation = Simulation(800, 600,"Simulation")
-    dashboard = Dashboard(800, 600,"Dashboard")
+    simulation = Simulation(width=800, height=600, caption="Simulation")
+    dashboard = Dashboard(width=800, height=600, caption="Dashboard")
+    pyglet.clock.schedule(simulation.update)
     pyglet.app.run()

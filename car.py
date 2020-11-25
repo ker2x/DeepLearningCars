@@ -443,7 +443,7 @@ class Auto(RaceCar):
         RaceCar.start(self)
         self.getCurrentGate().activate()
         self.stop = 0
-        self.start_time = pygame.time.get_ticks()
+#        self.start_time = pygame.time.get_ticks()
 
     def nextGate(self):
         if self.top:
@@ -497,9 +497,9 @@ class Auto(RaceCar):
 
                 i += 1
 
-            if pygame.time.get_ticks() - self.start_time > 2000:
-                if not cols:  # same as if len(cols) == 0
-                    self.stop = 1  # KERU collision fix
+#            if pygame.time.get_ticks() - self.start_time > 2000:
+#                if not cols:  # same as if len(cols) == 0
+#                    self.stop = 1  # KERU collision fix
 
             if col is None:
                 col = end
