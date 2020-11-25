@@ -134,8 +134,8 @@ class AutoBrain:
         graph.append(Line((0,-50),(0,50),(0,0,0),0))
         graph.append(Circle(10, ((layers[out_layer_i].output[1]) * 50, (- layers[out_layer_i].output[0]) * 50),(50,50,50)))
         self.auto.world.viewer.draw(graph)
-        self.history.append(Circle(2, ((layers[out_layer_i].output[1]) * 50, (- layers[out_layer_i].output[0]) * 50),(170,0,0)))
-        self.auto.world.viewer.draw(self.history)
+        self.history.append(Circle(4, ((layers[out_layer_i].output[1]) * 50, (- layers[out_layer_i].output[0]) * 50),(170,0,0)))
+        #self.auto.world.viewer.draw(self.history)
 
         # KERU add speed
         self.auto.world.viewer.draw([Line((-70,50),(-70,50 - self.input[7]),(0,0,200),10)])
@@ -285,26 +285,26 @@ class Car(PhysicsEntity):
         self.rotate()
 
     def input(self):
-        for event in self.world.events:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    self.accelerating = 1
-                if event.key == pygame.K_DOWN:
-                    self.breaking = 1
-                if event.key == pygame.K_RIGHT:
-                    self.turning = 1
-                if event.key == pygame.K_LEFT:
-                    self.turning = -1
-
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_UP:
-                    self.accelerating = 0
-                if event.key == pygame.K_DOWN:
-                    self.breaking = 0
-                if event.key == pygame.K_RIGHT:
-                    self.turning = 0
-                if event.key == pygame.K_LEFT:
-                    self.turning = 0
+        # for event in self.world.events:
+        #     if event.type == pygame.KEYDOWN:
+        #         if event.key == pygame.K_UP:
+        #             self.accelerating = 1
+        #         if event.key == pygame.K_DOWN:
+        #             self.breaking = 1
+        #         if event.key == pygame.K_RIGHT:
+        #             self.turning = 1
+        #         if event.key == pygame.K_LEFT:
+        #             self.turning = -1
+        #
+        #     if event.type == pygame.KEYUP:
+        #         if event.key == pygame.K_UP:
+        #             self.accelerating = 0
+        #         if event.key == pygame.K_DOWN:
+        #             self.breaking = 0
+        #         if event.key == pygame.K_RIGHT:
+        #             self.turning = 0
+        #         if event.key == pygame.K_LEFT:
+        #             self.turning = 0
 
         if self.accelerating:
             self.applyEngineForce()

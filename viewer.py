@@ -1,8 +1,3 @@
-import os
-# import pygame
-import pyglet
-
-# from pygame.locals import *
 from vector import Vector
 
 
@@ -38,7 +33,8 @@ class Viewer:
         self.pos.add(old)
 
     def clear(self, color=(100, 180, 110)):
-        self.display.fill(color)
+        # self.display.fill(color)
+        pass
 
     # TODO : optimize this ! (14% CPU time)
     def draw(self, shapes):

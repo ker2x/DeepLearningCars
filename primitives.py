@@ -71,7 +71,7 @@ class Line:
         #                 [int(self.start.x), int(self.start.y)],
         #                 [int(self.end.x), int(self.end.y)], self.width * 2 + 1)
         pyglet.shapes.Line.opacity = self.alpha
-        pyglet.shapes.Line(self.start.x, self.start.y, self.end.x, self.end.y, self.width, self.color).draw()
+        pyglet.shapes.Line(self.start.x, self.start.y, self.end.x, self.end.y, self.width, (int(self.color[0]), int(self.color[1]), int(self.color[2]))).draw()
 
 
 class Text:
@@ -109,7 +109,7 @@ class Circle:
 
     def draw(self):
         #pygame.draw.circle(display, self.color, (int(self.pos.x), int(self.pos.y)), int(self.radius))
-        pyglet.shapes.Circle(self.pos.x, self.pos.y, self.radius, color=self.color).draw()
+        pyglet.shapes.Circle(x=self.pos.x, y=self.pos.y, radius=self.radius, color=self.color).draw()
 #        circle = pyglet.shapes.Circle(700, 150, 100, color=(50, 225, 30)).draw()
 
 class Poly:
