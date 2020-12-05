@@ -2,7 +2,7 @@ import os
 import pygame
 
 from pygame.locals import *
-from vector import Vector
+from old_vector import Vector
 
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (20, 30)
 

@@ -1,3 +1,4 @@
+
 import timeit
 from random import randint, choice
 
@@ -10,8 +11,8 @@ from track import RaceTrack
 from viewer import TargetViewer
 
 
-reset_timer = 30000  # reset the track after n ms
-num_car = 50  # how many car to spawn
+reset_timer = 20000  # reset the track after n ms
+num_car = 200  # how many car to spawn
 LEARNING_RATE = 0.1
 LEARNING_RATE_DEC = 0.001
 LEARNING_RATE_MIN = 0.05
@@ -86,7 +87,7 @@ class AutoSimulation:
         for car in self.autos:
             if not car.stop:  # only update unstopped car
                 car.update()
-                if (not self.slow_car_removed) and ((pygame.time.get_ticks() - self.start_time) > 10000):
+                if 2000 < (pygame.time.get_ticks() - self.start_time) < 3000:
                     """remove slow car after N ms"""
                     if car.vel.getMag() < 10:
                         car.stop = 1

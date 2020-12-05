@@ -1,10 +1,12 @@
+
 import math
 import numpy as np
 import random
 
-from physic import PhysicsEntity
 from primitives import *
 
+cdef int next_id
+next_id = 0
 
 def logistic(r, x):
     return r * x * (1 - x)
@@ -29,7 +31,9 @@ def tanh(val):
     return (2.0 / (1 + math.pow(math.e, -2 * val / 10.0))) - 1
 
 
-class Dense:
+cdef class Dense:
+    cdef public object weights, bias, output, activation
+
     def __init__(self, input_size, output_size, activation):
         self.weights = np.zeros((input_size, output_size), dtype=np.single)
         self.bias = np.zeros(output_size, dtype=np.single)
@@ -202,8 +206,51 @@ class AutoBrain:
 
         self.auto.world.viewer.draw(last_layer)
 
+cdef class PhysicsEntity:
+    cdef public object pos, vel, acc, world
+    cdef public int mass
 
-class Car(PhysicsEntity):
+    def __init__(self, world, pos=(0, 0), vel=(0, 0), acc=(0, 0)):
+        self.pos = Vector()
+        self.vel = Vector()
+        self.acc = Vector()
+        self.pos.set(pos)
+        self.vel.set(vel)
+        self.acc.set(acc)
+        self.world = world
+        self.mass = 150
+
+    def applyForce(self, f=(0, 0)):
+        self.acc.add((f[0] / self.mass, f[1] / self.mass))
+
+#    def applyFriction(self, f=.1):
+#        f = pow(1 - f, self.world.dt)
+#        self.vel.mult((f, f))
+
+    def applyVel(self):
+        v = Vector()
+        v.set(self.vel)
+        v.mult((self.world.dt, self.world.dt))
+        self.pos.add(v)
+
+    def applyAcc(self):
+        a = Vector()
+        a.set(self.acc)
+        a.mult((self.world.dt, self.world.dt))
+        self.vel.add(a)
+        self.acc.mult((0, 0))
+
+ #   def update(self):
+ #       self.applyAcc()
+ #       self.applyVel()
+
+
+cdef class Car(PhysicsEntity):
+    cdef public object body, lat_vel
+    cdef public double steering_angle, max_steering_angle, c_drag, c_rr, c_tf
+    cdef readonly int breakingForce, engineForce
+    cdef public int accelerating, breaking, turning
+
     def __init__(self, world):
         PhysicsEntity.__init__(self, world)
         self.body = Poly()
@@ -358,7 +405,9 @@ class Car(PhysicsEntity):
 
 
 
-class RaceCar(Car):
+cdef class RaceCar(Car):
+    cdef public int stop
+
     def __init__(self, world):
         Car.__init__(self, world)
         self.current_track = 0
@@ -422,6 +471,12 @@ class RaceCar(Car):
 
 
 class Auto(RaceCar):
+    #cdef int next_id
+    #cdef public double start_time, fitness
+    #cdef public int current_track, top, engine_amt, break_amt, turn_amt, id
+    #cdef public list angles, inputs
+    #cdef public object brain, gen, parent
+    #global next_id
     next_id = 0
 
     def __init__(self, world, parent=None):
@@ -446,7 +501,7 @@ class Auto(RaceCar):
         self.gen = world.generation
         self.parent = parent
         self.id = Auto.next_id
-        Auto.next_id += 1
+        self.next_id += 1
 
 
     def getName(self):

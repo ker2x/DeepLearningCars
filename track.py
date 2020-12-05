@@ -49,9 +49,9 @@ class RaceTrack:
         track_inner.points = []
 
         #dumb hack to generate only 1 track
-        points = copy.copy(self.points)
+        #points = copy.copy(self.points)
         # the usual way below
-        # points = np.random.rand(randint(30, 80), 2) # the more point, the more it will be a square
+        points = np.random.rand(randint(30, 80), 2) # the more point, the more it will be a square
         hull = ConvexHull(points)
         self.dir = choice([-1,1])   # (randint(0, 1) * 2) - 1
         verts = hull.vertices  # vertices is the list of the index of the point making the convex hull

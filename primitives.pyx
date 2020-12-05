@@ -1,9 +1,11 @@
 import pygame
 
-from vector import Vector
+from fvector import Vector
 
 
-class Line:
+cdef class Line:
+    cdef public object start, end, width, color
+
     def __init__(self, s=(0, 0), e=(1, 1), color=(255, 0, 0), width=1):
         self.start = Vector()
         self.start.set(s)
@@ -31,10 +33,11 @@ class Line:
 
     # TODO: optimize this !
     def getLineIntercept(self, line):
-        #m1 = self.getSlope()        # (self.start.y - self.end.y) / (self.start.x - self.end.x)
-        #b1 = self.getIntercept()    # self.start.y - (((self.start.y - self.end.y) / (self.start.x - self.end.x)) * self.start.x)
-        #m2 = line.getSlope()
-        #b2 = line.getIntercept()
+        cdef double m1, b1,m2, b2, xi
+#        m1 = self.getSlope()        # (self.start.y - self.end.y) / (self.start.x - self.end.x)
+#        b1 = self.getIntercept()    # self.start.y - (((self.start.y - self.end.y) / (self.start.x - self.end.x)) * self.start.x)
+#        m2 = line.getSlope()
+#        b2 = line.getIntercept()
         m1 = (self.start.y - self.end.y) / (self.start.x - self.end.x)
         b1 = self.start.y - (((self.start.y - self.end.y) / (self.start.x - self.end.x)) * self.start.x)
         m2 = (line.start.y - line.end.y) / (line.start.x - line.end.x)
