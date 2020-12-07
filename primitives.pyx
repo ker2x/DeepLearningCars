@@ -34,14 +34,14 @@ cdef class Line:
     # TODO: optimize this !
     def getLineIntercept(self, line):
         cdef double m1, b1,m2, b2, xi
-#        m1 = self.getSlope()        # (self.start.y - self.end.y) / (self.start.x - self.end.x)
-#        b1 = self.getIntercept()    # self.start.y - (((self.start.y - self.end.y) / (self.start.x - self.end.x)) * self.start.x)
-#        m2 = line.getSlope()
-#        b2 = line.getIntercept()
-        m1 = (self.start.y - self.end.y) / (self.start.x - self.end.x)
-        b1 = self.start.y - (((self.start.y - self.end.y) / (self.start.x - self.end.x)) * self.start.x)
-        m2 = (line.start.y - line.end.y) / (line.start.x - line.end.x)
-        b2 = line.start.y - (((line.start.y - line.end.y) / (line.start.x - line.end.x)) * line.start.x)
+        m1 = self.getSlope()        # (self.start.y - self.end.y) / (self.start.x - self.end.x)
+        b1 = self.getIntercept()    # self.start.y - (((self.start.y - self.end.y) / (self.start.x - self.end.x)) * self.start.x)
+        m2 = line.getSlope()
+        b2 = line.getIntercept()
+#        m1 = (self.start.y - self.end.y) / (self.start.x - self.end.x)
+#        b1 = self.start.y - (((self.start.y - self.end.y) / (self.start.x - self.end.x)) * self.start.x)
+#        m2 = (line.start.y - line.end.y) / (line.start.x - line.end.x)
+#        b2 = line.start.y - (((line.start.y - line.end.y) / (line.start.x - line.end.x)) * line.start.x)
 
         try:
              xi = (b2 - b1) / (m1 - m2)
@@ -51,7 +51,7 @@ cdef class Line:
             #            (line.start.y - line.end.y) / (line.start.x - line.end.x)))
 
         except (ZeroDivisionError, TypeError) as e:
-            print("Exception in GetLineIntercept : %s", e)
+            print("Exception in GetLineIntercept : %s" % e)
             return None
 
         if self.inDomain(xi) and line.inDomain(xi):  # indomain : min(self.start.x, self.end.x) < x < max(self.start.x, self.end.x)
@@ -85,6 +85,7 @@ cdef class Line:
 
 class Text:
     def __init__(self, message):
+        pygame.font.init()
         self.font = pygame.font.Font('barcade-brawl.ttf', 16)
         self.text = self.font.render(message, False, (0, 0, 0))
         self.textRect = self.text.get_rect()
@@ -206,8 +207,10 @@ class Poly:
         pygame.draw.polygon(display, self.color, points)
 
 
-class Rect:
-    def __init__(self, size=(7.5, 15), pos=(0, 0)):
+cdef class Rect:
+    cdef public object size, pos
+
+    def __init__(self, size, pos=(0, 0)):
         self.size = Vector()
         self.size.set(size)
         self.pos = Vector()

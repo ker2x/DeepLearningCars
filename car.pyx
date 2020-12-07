@@ -86,8 +86,8 @@ class AutoBrain:
         self.input = []
         self.dense1 = Dense(self.num_input, 18, relu)
         self.dense2 = Dense(18, 9, lrelu)
-        # self.dense3 = Dense(9, 4, relu)
-        self.out = Dense(9, 2, tanh)
+        self.dense3 = Dense(9, 4, relu)
+        self.out = Dense(4, 2, tanh)
         self.randomize(self.auto.world.learning_rate)
         self.history = []
 
@@ -96,7 +96,7 @@ class AutoBrain:
         _input = np.array(_input)
         output = self.dense1.call(_input)
         output = self.dense2.call(output)
-        # output = self.dense3.call(output)
+        output = self.dense3.call(output)
         output = self.out.call(output)
         return output
 
@@ -108,9 +108,9 @@ class AutoBrain:
         if random.getrandbits(1):
             self.dense2.setRandomWeights(amt)
             self.dense2.setRandomBiases(amt)
-        # if random.getrandbits(1):
-        #    self.dense3.setRandomWeights(amt)
-        #    self.dense3.setRandomBiases(amt)
+        if random.getrandbits(1):
+            self.dense3.setRandomWeights(amt)
+            self.dense3.setRandomBiases(amt)
         if random.getrandbits(1):
             self.out.setRandomWeights(amt)
             self.out.setRandomBiases(amt)
@@ -121,8 +121,8 @@ class AutoBrain:
         self.dense1.bias += parent.dense1.bias
         self.dense2.weights += parent.dense2.weights
         self.dense2.bias += parent.dense2.bias
-        # self.dense3.weights += parent.dense3.weights
-        # self.dense3.bias += parent.dense3.bias
+        self.dense3.weights += parent.dense3.weights
+        self.dense3.bias += parent.dense3.bias
         self.out.weights += parent.out.weights
         self.out.bias += parent.out.bias * amt
         for i in range(len(parent.auto.angles)):
@@ -133,8 +133,8 @@ class AutoBrain:
     def draw(self, bounding_rect):
         """Draw the NN and joystick"""
         # return None
-        # layers = [self.dense1, self.dense2, self.dense3, self.out]
-        layers = [self.dense1, self.dense2, self.out]
+        layers = [self.dense1, self.dense2, self.dense3, self.out]
+        # layers = [self.dense1, self.dense2, self.out]
         width = bounding_rect.size.x / (len(layers) + 1)
         last_layer = []
         height = bounding_rect.size.y / len(self.input)
@@ -254,7 +254,7 @@ cdef class Car(PhysicsEntity):
     def __init__(self, world):
         PhysicsEntity.__init__(self, world)
         self.body = Poly()
-        self.body.setByRect(Rect())
+        self.body.setByRect(Rect(Vector(7,15)))
         self.steering_angle = 0
         self.lat_vel = Vector()
         self.max_steering_angle = math.pi / 6
