@@ -84,8 +84,8 @@ class AutoBrain:
         self.auto = auto
         self.num_input = 9
         self.input = []
-        self.dense1 = Dense(self.num_input, 18, relu)
-        self.dense2 = Dense(18, 9, lrelu)
+        self.dense1 = Dense(self.num_input, 9, relu)
+        self.dense2 = Dense(9, 9, lrelu)
         self.dense3 = Dense(9, 4, relu)
         self.out = Dense(4, 2, tanh)
         self.randomize(self.auto.world.learning_rate)
