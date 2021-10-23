@@ -15,13 +15,13 @@ cdef class Line:
         self.width = width
         self.color = color
 
-    def getSlope(self):
+    cpdef getSlope(self):
         try:
             return (self.start.y - self.end.y) / (self.start.x - self.end.x)
         except ZeroDivisionError:
             return None
 
-    def getIntercept(self):
+    cpdef getIntercept(self):
         try:
             return self.start.y - (((self.start.y - self.end.y) / (self.start.x - self.end.x)) * self.start.x)
         except ZeroDivisionError as e:
@@ -32,27 +32,45 @@ cdef class Line:
         return min(self.start.x, self.end.x) < x < max(self.start.x, self.end.x)
 
     # TODO: optimize this !
-    def getLineIntercept(self, line):
+    cpdef getLineIntercept(self, object line):
         cdef double m1, b1,m2, b2, xi
-        m1 = self.getSlope()        # (self.start.y - self.end.y) / (self.start.x - self.end.x)
-        b1 = self.getIntercept()    # self.start.y - (((self.start.y - self.end.y) / (self.start.x - self.end.x)) * self.start.x)
-        m2 = line.getSlope()
-        b2 = line.getIntercept()
-#        m1 = (self.start.y - self.end.y) / (self.start.x - self.end.x)
-#        b1 = self.start.y - (((self.start.y - self.end.y) / (self.start.x - self.end.x)) * self.start.x)
-#        m2 = (line.start.y - line.end.y) / (line.start.x - line.end.x)
-#        b2 = line.start.y - (((line.start.y - line.end.y) / (line.start.x - line.end.x)) * line.start.x)
+        cdef double sy, ey, sx, ex
+        cdef double lsy, ley, lsx, lex
+        sy = self.start.y
+        ey = self.end.y
+        sx = self.start.x
+        ex = self.end.x
+        lsy = line.start.y
+        ley = line.end.y
+        lsx = line.start.x
+        lex = line.end.x
 
-        try:
-             xi = (b2 - b1) / (m1 - m2)
+        #m1 = self.getSlope()        # (self.start.y - self.end.y) / (self.start.x - self.end.x)
+        #b1 = self.getIntercept()    # self.start.y - (((self.start.y - self.end.y) / (self.start.x - self.end.x)) * self.start.x)
+        #m2 = line.getSlope()
+        #b2 = line.getIntercept()
+        #m1 = (self.start.y - self.end.y) / (self.start.x - self.end.x)
+        #b1 = self.start.y - (((self.start.y - self.end.y) / (self.start.x - self.end.x)) * self.start.x)
+        #m2 = (line.start.y - line.end.y) / (line.start.x - line.end.x)
+        #b2 = line.start.y - (((line.start.y - line.end.y) / (line.start.x - line.end.x)) * line.start.x)
+        m1 = (sy - ey) / (sx - ex)
+        b1 = sy - (((sy - ey) / (sx - ex)) * sx)
+        m2 = (lsy - ley) / (lsx - lex)
+        b2 = lsy - (((lsy - ley) / (lsx - lex)) * lsx)
+
+#        try:
+        if((m1 - m2) == 0):
+            return None
+        else:
+            xi = (b2 - b1) / (m1 - m2)
             #xi = ((line.start.y - (((line.start.y - line.end.y) / (line.start.x - line.end.x)) * line.start.x)) \
             #      - (self.start.y - (((self.start.y - self.end.y) / (self.start.x - self.end.x)) * self.start.x))) \
             #      / (((self.start.y - self.end.y) / (self.start.x - self.end.x)) - (
             #            (line.start.y - line.end.y) / (line.start.x - line.end.x)))
 
-        except (ZeroDivisionError, TypeError) as e:
-            print("Exception in GetLineIntercept : %s" % e)
-            return None
+#        except (ZeroDivisionError, TypeError) as e:
+#            print("Exception in GetLineIntercept : %s" % e)
+#            return None
 
         if self.inDomain(xi) and line.inDomain(xi):  # indomain : min(self.start.x, self.end.x) < x < max(self.start.x, self.end.x)
             yi = (m1 * xi) + b1
