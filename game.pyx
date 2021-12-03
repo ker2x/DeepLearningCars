@@ -184,7 +184,7 @@ cdef class Game:
 
     def __init__(self, world=AutoSimulation()):
         self.world = world
-        self.fps = 5
+        self.fps = 30
         self.running = 1
         self.t = timeit.default_timer()
 
